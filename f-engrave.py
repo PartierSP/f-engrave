@@ -1668,6 +1668,9 @@ class Application(Frame):
             "fengrave_set var_dis     %s " % (int(self.var_dis.get()))
         )
         gcode.append_comment(
+            "fengrave_set line_numbers %s " % (int(self.line_numbers.get()))
+        )
+        gcode.append_comment(
             "fengrave_set ext_char    %s " % (int(self.ext_char.get()))
         )
         gcode.append_comment(
@@ -3833,6 +3836,8 @@ class Application(Frame):
                     )
                 elif "var_dis" in input_code:
                     self.var_dis.set(line[line.find("var_dis") :].split()[1])
+                elif "line_numbers" in input_code:
+                    self.line_numbers.set(line[line.find("line_numbers") :].split()[1])
                 elif "v_depth_lim" in input_code:
                     self.v_depth_lim.set(
                         line[line.find("v_depth_lim") :].split()[1]
