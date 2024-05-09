@@ -22,7 +22,8 @@ class Gcode(list):
                  tolerance=0.001,
                  arc_fit="none",
                  metric=False,
-                 enable_variables=False):
+                 enable_variables=False,
+                 line_numbers=1):
         list.__init__(self)
 
         self.lastx = self.lasty = self.lastz = self.lastf = None
@@ -32,6 +33,7 @@ class Gcode(list):
         self.cuts = []
         self.metric = metric
         self.enable_variables = enable_variables
+        self.line_numbers = line_numbers
         if self.metric:
             self.dp = 3
             self.dpfeed = 1
@@ -235,6 +237,9 @@ class Gcode(list):
             self.writeline('G20 (in)')
 
     def writeline(self,line):
-        self.linenumber=self.linenumber+1
-        newline = "".join(['N'+str(self.linenumber), ' ',line])
-        self.write(newline)
+        if (self.line_numbers == 1):
+            self.linenumber=self.linenumber+1
+            newline = "".join(['N'+str(self.linenumber), ' ',line])
+            self.write(newline)
+        else:
+            self.write(line)

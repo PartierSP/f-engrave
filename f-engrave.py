@@ -576,6 +576,7 @@ class Application(Frame):
         self.no_comments = BooleanVar()
         self.ext_char = BooleanVar()
         self.var_dis = BooleanVar()
+        self.line_numbers = BooleanVar()
         self.useIMGsize = BooleanVar()
         self.plotbox = BooleanVar()
 
@@ -669,6 +670,7 @@ class Application(Frame):
         self.no_comments.set(1)
         self.ext_char.set(0)
         self.var_dis.set(1)
+        self.line_numbers.set(1)
 
         self.clean_P.set(1)
         self.clean_X.set(1)
@@ -1884,6 +1886,7 @@ class Application(Frame):
             arc_fit=self.arc_fit.get(),
             metric=self.units.get() != "in",
             enable_variables=not self.var_dis.get(),
+            line_numbers=self.line_numbers.get()
         )
 
         if config_file or not self.no_comments.get():
@@ -7751,6 +7754,17 @@ class Application(Frame):
             x=xd_entry_L, y=D_Yloc, width=75, height=23
         )
         self.Checkbutton_var_dis.configure(variable=self.var_dis)
+
+        D_Yloc = D_Yloc + D_dY
+        self.Label_var_dis = Label(gen_settings, text="Output Line Numbers")
+        self.Label_var_dis.place(
+            x=xd_label_L, y=D_Yloc, width=w_label, height=21
+        )
+        self.Checkbutton_line_numbers = Checkbutton(gen_settings, text="", anchor=W)
+        self.Checkbutton_line_numbers.place(
+            x=xd_entry_L, y=D_Yloc, width=75, height=23
+        )
+        self.Checkbutton_line_numbers.configure(variable=self.line_numbers)
 
         D_Yloc = D_Yloc + D_dY
         font_entry_width = 215
