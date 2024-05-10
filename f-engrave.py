@@ -7768,7 +7768,7 @@ class Application(Frame):
         self.Label_line_numb_ToolTip = ToolTip(
             self.Label_line_numb,
             text="Adds line numbers to the G-Code output. "
-            "The additional data may lead to studdering due "
+            "The additional data may lead to stuttering due "
             "to proccessing speed of some CNC controllers.",
         )
         self.Checkbutton_line_numbers = Checkbutton(gen_settings, text="", anchor=W)
