@@ -670,7 +670,7 @@ class Application(Frame):
         self.no_comments.set(1)
         self.ext_char.set(0)
         self.var_dis.set(1)
-        self.line_numbers.set(1)
+        self.line_numbers.set(0)
 
         self.clean_P.set(1)
         self.clean_X.set(1)
@@ -7761,9 +7761,15 @@ class Application(Frame):
         self.Checkbutton_var_dis.configure(variable=self.var_dis)
 
         D_Yloc = D_Yloc + D_dY
-        self.Label_var_dis = Label(gen_settings, text="Output Line Numbers")
-        self.Label_var_dis.place(
+        self.Label_line_numb = Label(gen_settings, text="Output Line Numbers")
+        self.Label_line_numb.place(
             x=xd_label_L, y=D_Yloc, width=w_label, height=21
+        )
+        self.Label_line_numb_ToolTip = ToolTip(
+            self.Label_line_numb,
+            text="Adds line numbers to the G-Code output. "
+            "The additional data may lead to studdering due "
+            "to proccessing speed of some CNC controllers.",
         )
         self.Checkbutton_line_numbers = Checkbutton(gen_settings, text="", anchor=W)
         self.Checkbutton_line_numbers.place(
