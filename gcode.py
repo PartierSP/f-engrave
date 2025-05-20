@@ -22,15 +22,18 @@ class Gcode(list):
                  tolerance=0.001,
                  arc_fit="none",
                  metric=False,
-                 enable_variables=False):
+                 enable_variables=False,
+                 line_numbers=1):
         list.__init__(self)
 
         self.lastx = self.lasty = self.lastz = self.lastf = None
         self.feed = None
         self.plane = None
+        self.linenumber = 0
         self.cuts = []
         self.metric = metric
         self.enable_variables = enable_variables
+        self.line_numbers = line_numbers
         if self.metric:
             self.dp = 3
             self.dpfeed = 1
@@ -49,7 +52,7 @@ class Gcode(list):
             assert plane in (Plane.xy, Plane.xz, Plane.yz)
             if plane != self.plane:
                 self.plane = plane
-                self.write("G%d" % plane)
+                self.writeline("G%d" % plane)
 
     # If any 'cut' moves are stored up, send them to the simplification
     # algorithm and actually output them.
@@ -147,7 +150,7 @@ class Gcode(list):
                            Jstring, fstring])
 
         if cmd:
-            self.write(cmd)
+            self.writeline(cmd)
 
     def set_feed(self, feed, write_it=False):
         # Set the feed rate to the given value
@@ -157,7 +160,7 @@ class Gcode(list):
         self.feed = FORMAT % self.feed_val
         self.lastf = None
         if write_it:
-            self.write(self.feed)
+            self.writeline(self.feed)
             self.lastf = self.feed
 
     def set_z_feed(self, z_feed):
@@ -209,7 +212,7 @@ class Gcode(list):
     def _append_pre_post_amble(self, commands, comment):
         self.append_comment(comment)
         for line in commands.split('|'):
-            self.write(line)
+            self.writeline(line)
         self.append_comment("End %s" % (comment))
 
     def append_preamble(self, commands):
@@ -220,15 +223,23 @@ class Gcode(list):
 
     def append_mode(self):
         # G90        ; Sets absolute distance mode
-        self.write('G90 (absolute)')
+        self.writeline('G90 (absolute)')
         # G91.1      ; Sets Incremental Distance Mode for I, J & K arc offsets.
         if (self.arc_fit == "center"):
-            self.write('G91.1')
+            self.writeline('G91.1')
 
     def append_units(self):
         if self.metric:
             # G21 ; sets units to mm
-            self.write('G21 (mm)')
+            self.writeline('G21 (mm)')
         else:
             # G20 ; sets units to inches
-            self.write('G20 (in)')
+            self.writeline('G20 (in)')
+
+    def writeline(self,line):
+        if (self.line_numbers == 1):
+            self.linenumber=self.linenumber+1
+            newline = "".join(['N'+str(self.linenumber), ' ',line])
+            self.write(newline)
+        else:
+            self.write(line)

@@ -576,6 +576,7 @@ class Application(Frame):
         self.no_comments = BooleanVar()
         self.ext_char = BooleanVar()
         self.var_dis = BooleanVar()
+        self.line_numbers = BooleanVar()
         self.useIMGsize = BooleanVar()
         self.plotbox = BooleanVar()
 
@@ -669,6 +670,7 @@ class Application(Frame):
         self.no_comments.set(1)
         self.ext_char.set(0)
         self.var_dis.set(1)
+        self.line_numbers.set(0)
 
         self.clean_P.set(1)
         self.clean_X.set(1)
@@ -1666,6 +1668,9 @@ class Application(Frame):
             "fengrave_set var_dis     %s " % (int(self.var_dis.get()))
         )
         gcode.append_comment(
+            "fengrave_set line_numbers %s " % (int(self.line_numbers.get()))
+        )
+        gcode.append_comment(
             "fengrave_set ext_char    %s " % (int(self.ext_char.get()))
         )
         gcode.append_comment(
@@ -1884,6 +1889,7 @@ class Application(Frame):
             arc_fit=self.arc_fit.get(),
             metric=self.units.get() != "in",
             enable_variables=not self.var_dis.get(),
+            line_numbers=self.line_numbers.get()
         )
 
         if config_file or not self.no_comments.get():
@@ -3830,6 +3836,8 @@ class Application(Frame):
                     )
                 elif "var_dis" in input_code:
                     self.var_dis.set(line[line.find("var_dis") :].split()[1])
+                elif "line_numbers" in input_code:
+                    self.line_numbers.set(line[line.find("line_numbers") :].split()[1])
                 elif "v_depth_lim" in input_code:
                     self.v_depth_lim.set(
                         line[line.find("v_depth_lim") :].split()[1]
@@ -7751,6 +7759,23 @@ class Application(Frame):
             x=xd_entry_L, y=D_Yloc, width=75, height=23
         )
         self.Checkbutton_var_dis.configure(variable=self.var_dis)
+
+        D_Yloc = D_Yloc + D_dY
+        self.Label_line_numb = Label(gen_settings, text="Output Line Numbers")
+        self.Label_line_numb.place(
+            x=xd_label_L, y=D_Yloc, width=w_label, height=21
+        )
+        self.Label_line_numb_ToolTip = ToolTip(
+            self.Label_line_numb,
+            text="Adds line numbers to the G-Code output. "
+            "The additional data may lead to stuttering due "
+            "to proccessing speed of some CNC controllers.",
+        )
+        self.Checkbutton_line_numbers = Checkbutton(gen_settings, text="", anchor=W)
+        self.Checkbutton_line_numbers.place(
+            x=xd_entry_L, y=D_Yloc, width=75, height=23
+        )
+        self.Checkbutton_line_numbers.configure(variable=self.line_numbers)
 
         D_Yloc = D_Yloc + D_dY
         font_entry_width = 215
